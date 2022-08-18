@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="task5.css">
+</head>
+
+<body>
+    <button id="btn-start">Начать игру</button>
+    <div class="table_container">
+        <table>
+        </table>
+    </div>
+    <div class="timer">
+        <p id="timer-count" class="timer_count"></p>
+    </div>
+    <script>
+        let btnStart = document.getElementById("btn-start");
+        let table = document.querySelector("table");
+        let timer = document.getElementById("timer-count");
+        let timerId;
+
+        btnStart.addEventListener("click", function () {
+            clearInterval(timerId);
+            timer.innerHTML = "60";
+            btnStart.innerHTML = "Начать игру заного";
+            table.innerHTML = "";
+            for (let i = 0; i < 10; i++) {
+
+                let tr = document.createElement("tr");
+                table.appendChild(tr);
+
+                for (let j = 0; j < 10; j++) {
+
+                    let td = document.createElement("td");
+                    tr.appendChild(td);
+                }
+            }
+
+            let tds = document.querySelectorAll("td");
+
+            for (let elem of tds) {
+                elem.addEventListener("click", function () {
+                    elem.classList.add("incorrect");
+                });
+            }
+
+            let random_start = 0;
+            let random_end = 99;
+
+            let allСycles = 11;
+
+            let array = []
+            let result = [];
+
+            for (i = random_start; i <= random_end; i++) {
+                array.push(i)
+            }
+
+            for (countCycles = 1; countCycles < allСycles; countCycles++) {
+                result.push(array.splice(Math.random() * array.length, 1)[0]);
+            }
+
+            let count = 0;
+
+            for (let elem of result) {
+                tds[elem].addEventListener("click", function () {
+                    if (count >= 9) {
+                        btnStart.innerHTML = "Вы выйграли, начнем сначала?)"
+                        table.innerHTML = "";
+                    } else {
+                        this.classList.remove("incorrect");
+                        if (this.classList.contains("used")) {
+                        } else {
+                            this.classList.add("correct");
+                            this.classList.add("used");
+                            count++;
+                        }
+                    }
+                });
+            }
+            timerId = setInterval(function () {
+                if (Number(timer.innerHTML) === 0) {
+                    timer.innerHTML = "";
+                    table.innerHTML = "";
+                    btnStart.innerHTML = "Время вышло. Начать игру заного?";
+                    clearInterval(timerId);
+                } else {
+                    timer.innerHTML = Number(timer.innerHTML) - 1;
+                }
+
+                if (count >= 9) {
+                    btnStart.innerHTML = "Вы выйграли, начнем сначала?)"
+                    table.innerHTML = "";
+                    timer.innerHTML = "";
+                    clearInterval(timerId);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
